@@ -1,0 +1,12 @@
+#Archivos
+*.orig
+
+#Carpetas
+[Bb]in/
+[Oo]bj/
+
+packages/
+.vs/
+
+EjerciciosDotNetCSharp/bin/
+EjerciciosDotNetCSharp/obj/
