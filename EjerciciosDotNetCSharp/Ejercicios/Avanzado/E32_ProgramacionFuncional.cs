@@ -21,7 +21,7 @@ public class E32_ProgramacionFuncional : IEjercicio
         Console.WriteLine($"(x*2)+1 con x=5 -> {duplicarLuegoIncrementar(5)}");
 
         // Pipeline funcional con LINQ: transformar datos sin mutar la lista.
-        int[] numeros = { 1, 2, 3, 4, 5, 6 };
+        int[] numeros = [1, 2, 3, 4, 5, 6];
         var resultado = numeros
             .Where(n => n % 2 == 0)   // filtrar
             .Select(duplicar)         // transformar
@@ -41,30 +41,24 @@ public class E32_ProgramacionFuncional : IEjercicio
 
     private static void MostrarDivision(int a, int b)
     {
-        Resultado<int> r = DividirSeguro(a, b);
-        string texto = r.EsExito ? $"= {r.Valor}" : $"error: {r.Error}";
+        // El switch obliga a contemplar cada caso y da acceso a sus datos.
+        string texto = DividirSeguro(a, b) switch
+        {
+            Exito<int>(var valor) => $"= {valor}",
+            Fallo<int>(var error) => $"error: {error}",
+            _ => throw new InvalidOperationException("Resultado desconocido"),
+        };
         Console.WriteLine($"  {a} / {b} -> {texto}");
     }
 
     // Devuelve éxito o fallo SIN lanzar excepciones.
     private static Resultado<int> DividirSeguro(int a, int b)
         => b == 0
-            ? Resultado<int>.Fallo("división por cero")
-            : Resultado<int>.Exito(a / b);
+            ? new Fallo<int>("división por cero")
+            : new Exito<int>(a / b);
 
-    /// <summary>Encapsula "éxito con valor" o "fallo con mensaje".</summary>
-    private readonly struct Resultado<T>
-    {
-        public bool EsExito { get; }
-        public T? Valor { get; }
-        public string? Error { get; }
-
-        private Resultado(bool ok, T? valor, string? error)
-        {
-            EsExito = ok; Valor = valor; Error = error;
-        }
-
-        public static Resultado<T> Exito(T valor) => new(true, valor, null);
-        public static Resultado<T> Fallo(string error) => new(false, default, error);
-    }
+    /// <summary>Un resultado es uno de dos casos: "éxito con valor" o "fallo con mensaje".</summary>
+    private abstract record Resultado<T>;
+    private sealed record Exito<T>(T Valor) : Resultado<T>;
+    private sealed record Fallo<T>(string Error) : Resultado<T>;
 }

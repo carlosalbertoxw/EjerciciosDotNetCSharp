@@ -2,9 +2,10 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 
 /// <summary>
 /// Ejercicio 11 - Manejo de excepciones.
-/// Principio: cuando algo falla en tiempo de ejecucion, C# lanza una excepcion.
+/// Principio: cuando algo falla en tiempo de ejecución, C# lanza una excepción.
 /// Con try/catch la capturamos para que el programa no se caiga; finally se
-/// ejecuta siempre. Tambien podemos lanzar (throw) nuestras propias excepciones.
+/// ejecuta siempre. También podemos lanzar (throw) excepciones, incluso de un
+/// tipo creado por nosotros.
 /// </summary>
 public class E11_Excepciones : IEjercicio
 {
@@ -12,7 +13,7 @@ public class E11_Excepciones : IEjercicio
 
     public void Ejecutar()
     {
-        // 1) Capturar una division por cero.
+        // 1) Capturar una división por cero.
         try
         {
             int a = 10, b = 0;
@@ -29,29 +30,49 @@ public class E11_Excepciones : IEjercicio
             Console.WriteLine("  finally: este bloque SIEMPRE se ejecuta.\n");
         }
 
-        // 2) Convertir texto a numero de forma segura.
+        // 2) Convertir texto a número de forma segura.
         string entrada = "abc";
         if (int.TryParse(entrada, out int numero))
             Console.WriteLine($"'{entrada}' convertido a {numero}");
         else
-            Console.WriteLine($"'{entrada}' no es un numero valido (TryParse evita la excepcion)\n");
+            Console.WriteLine($"'{entrada}' no es un número válido (TryParse evita la excepción)\n");
 
-        // 3) Lanzar y capturar una excepcion propia (validacion de edad).
+        // 3) Lanzar y capturar una excepción propia (validación de edad).
         try
         {
             ValidarEdad(-5);
         }
-        catch (ArgumentException ex)
+        catch (EdadInvalidaException ex)
         {
-            Console.WriteLine($"  [capturada] {ex.Message}");
+            Console.WriteLine($"  [capturada] {ex.Message} (edad recibida: {ex.Edad})");
+        }
+
+        // 4) Para argumentos inválidos comunes, .NET ya trae métodos de ayuda.
+        try
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(-1, "cantidad");
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine($"  [capturada] {ex.GetType().Name} en el parámetro '{ex.ParamName}'");
         }
     }
 
-    private void ValidarEdad(int edad)
+    private static void ValidarEdad(int edad)
     {
         if (edad < 0)
-            throw new ArgumentException("La edad no puede ser negativa");
+            throw new EdadInvalidaException(edad);
 
-        Console.WriteLine($"Edad valida: {edad}");
+        Console.WriteLine($"Edad válida: {edad}");
     }
+}
+
+/// <summary>
+/// Excepción propia: hereda de Exception y agrega los datos del error, así quien
+/// la captura puede distinguirla de las demás y consultar el valor recibido.
+/// </summary>
+file class EdadInvalidaException(int edad)
+    : Exception("La edad no puede ser negativa")
+{
+    public int Edad { get; } = edad;
 }

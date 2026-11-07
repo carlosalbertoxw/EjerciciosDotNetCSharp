@@ -29,7 +29,7 @@ public class E25_Concurrencia : IEjercicio
 
         // 2) Con 'lock': solo un hilo entra a la sección crítica a la vez.
         int conLock = 0;
-        object candado = new();
+        Lock candado = new();   // System.Threading.Lock: el tipo pensado para esto
         EjecutarEnParalelo(hilos, () =>
         {
             for (int i = 0; i < incrementosPorHilo; i++)

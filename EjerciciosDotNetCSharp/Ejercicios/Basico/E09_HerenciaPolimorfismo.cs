@@ -28,17 +28,17 @@ public class E09_HerenciaPolimorfismo : IEjercicio
 }
 
 /// <summary>Clase base. 'virtual' permite que las hijas la sobreescriban.</summary>
-public class Animal
+file class Animal
 {
     public string Nombre { get; }
 
     public Animal(string nombre) => Nombre = nombre;
 
-    public virtual string HacerSonido() => "...(sonido generico)";
+    public virtual string HacerSonido() => "...(sonido genérico)";
 }
 
 /// <summary>Perro hereda de Animal y redefine el sonido con 'override'.</summary>
-public class Perro : Animal
+file class Perro : Animal
 {
     // ': base(nombre)' pasa el nombre al constructor de la clase base.
     public Perro(string nombre) : base(nombre) { }
@@ -46,8 +46,8 @@ public class Perro : Animal
     public override string HacerSonido() => "Guau!";
 }
 
-/// <summary>Gato tambien hereda y aporta su propia version.</summary>
-public class Gato : Animal
+/// <summary>Gato también hereda y aporta su propia version.</summary>
+file class Gato : Animal
 {
     public Gato(string nombre) : base(nombre) { }
 

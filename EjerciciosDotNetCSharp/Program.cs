@@ -5,6 +5,9 @@ using EjerciciosDotNetCSharp.Ejercicios;
 //  Cada ejercicio implementa IEjercicio. Se agrupan en categorías (Básico,
 //  Intermedio, Avanzado); el menú principal elige categoría y el submenú corre
 //  los ejercicios de esa categoría.
+//
+//  Sin menú:  dotnet run -- --todos   ejecuta todos e indica en el código de
+//  salida si alguno falló (útil para comprobarlos de forma automática).
 // ============================================================================
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -15,10 +18,10 @@ System.Globalization.CultureInfo.CurrentCulture =
     System.Globalization.CultureInfo.GetCultureInfo("es-CO");
 
 // Catálogo de categorías, en orden de dificultad creciente.
-var categorias = new List<Categoria>
-{
-    new("Básico", new List<IEjercicio>
-    {
+List<Categoria> categorias =
+[
+    new("Básico",
+    [
         new E01_VariablesYTipos(),
         new E02_Operadores(),
         new E03_Cadenas(),
@@ -31,9 +34,9 @@ var categorias = new List<Categoria>
         new E10_Interfaces(),
         new E11_Excepciones(),
         new E12_Linq(),
-    }),
-    new("Intermedio", new List<IEjercicio>
-    {
+    ]),
+    new("Intermedio",
+    [
         new E13_Genericos(),
         new E14_DelegadosEventos(),
         new E15_NullSafety(),
@@ -44,9 +47,9 @@ var categorias = new List<Categoria>
         new E20_Iteradores(),
         new E21_Disposable(),
         new E22_ArchivosYJson(),
-    }),
-    new("Avanzado", new List<IEjercicio>
-    {
+    ]),
+    new("Avanzado",
+    [
         new E23_AsyncAwait(),
         new E24_Paralelismo(),
         new E25_Concurrencia(),
@@ -57,10 +60,18 @@ var categorias = new List<Categoria>
         new E30_PruebasUnitarias(),
         new E31_SpanMemory(),
         new E32_ProgramacionFuncional(),
-    }),
-};
+    ]),
+];
+
+if (args.Contains("--todos"))
+{
+    int fallidos = categorias.SelectMany(c => c.Ejercicios).Count(e => !EjecutarEjercicio(e));
+    Console.WriteLine($"\nEjercicios con error: {fallidos}");
+    return fallidos == 0 ? 0 : 1;
+}
 
 MenuPrincipal(categorias);
+return 0;
 
 // --- Menú principal: elegir categoría -------------------------------------
 static void MenuPrincipal(List<Categoria> categorias)
@@ -142,12 +153,23 @@ static bool Submenu(Categoria categoria)
     }
 }
 
-static void EjecutarEjercicio(IEjercicio ejercicio)
+// Devuelve false si el ejercicio falló; un error no debe cerrar el menú.
+static bool EjecutarEjercicio(IEjercicio ejercicio)
 {
     Console.WriteLine($"\n>>> {ejercicio.Titulo}");
     Console.WriteLine(new string('-', 50));
-    ejercicio.Ejecutar();
+    bool correcto = true;
+    try
+    {
+        ejercicio.Ejecutar();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($">> El ejercicio falló: {ex.GetType().Name}: {ex.Message}");
+        correcto = false;
+    }
     Console.WriteLine(new string('-', 50));
+    return correcto;
 }
 
 // Agrupa un nivel con sus ejercicios.

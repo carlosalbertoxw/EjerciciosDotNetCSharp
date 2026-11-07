@@ -2,8 +2,8 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 
 /// <summary>
 /// Ejercicio 03 - Cadenas de texto (string).
-/// Principio: las cadenas son inmutables (cada "modificacion" crea una nueva
-/// cadena). C# ofrece muchos metodos y la interpolacion con $"...".
+/// Principio: las cadenas son inmutables (cada "modificación" crea una nueva
+/// cadena). C# ofrece muchos métodos y la interpolación con $"...".
 /// </summary>
 public class E03_Cadenas : IEjercicio
 {
@@ -15,8 +15,8 @@ public class E03_Cadenas : IEjercicio
 
         Console.WriteLine($"Original      : {frase}");
         Console.WriteLine($"Longitud      : {frase.Length}");
-        Console.WriteLine($"Mayusculas    : {frase.ToUpper()}");
-        Console.WriteLine($"Minusculas    : {frase.ToLower()}");
+        Console.WriteLine($"Mayúsculas    : {frase.ToUpper()}");
+        Console.WriteLine($"Minúsculas    : {frase.ToLower()}");
         Console.WriteLine($"Contiene 'C#' : {frase.Contains("C#")}");
         Console.WriteLine($"Reemplazo     : {frase.Replace("Mundo", "Planeta")}");
         Console.WriteLine($"Subcadena(0,4): {frase.Substring(0, 4)}");
@@ -33,11 +33,18 @@ public class E03_Cadenas : IEjercicio
         string unidas = string.Join(" | ", frutas);
         Console.WriteLine($"\nJoin con ' | ' -> {unidas}");
 
-        // Interpolacion vs concatenacion.
+        // Interpolación vs concatenación.
         string usuario = "Ana";
         int puntos = 95;
         Console.WriteLine($"\nInterpolacion : {usuario} tiene {puntos} puntos");
-        Console.WriteLine("Concatenacion : " + usuario + " tiene " + puntos + " puntos");
+        Console.WriteLine("Concatenación : " + usuario + " tiene " + puntos + " puntos");
+
+        // Cadena literal cruda ("""): respeta saltos de línea y comillas sin escaparlas.
+        string poema = """
+            Caminante, no hay "camino",
+            se hace camino al andar.
+            """;
+        Console.WriteLine($"\nCadena cruda:\n{poema}");
 
         // La inmutabilidad: Trim() NO cambia la original, devuelve una nueva.
         string conEspacios = "   texto   ";

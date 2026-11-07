@@ -6,7 +6,8 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 /// Ejercicio 23 - Programación asíncrona (async / await).
 /// Principio: 'await' libera el hilo mientras una operación lenta (red, disco)
 /// termina, en vez de bloquearlo. Varias tareas pueden ejecutarse en paralelo
-/// con Task.WhenAll. Aquí simulamos latencia con Task.Delay.
+/// con Task.WhenAll, y IAsyncEnumerable entrega resultados a medida que llegan.
+/// Aquí simulamos latencia con Task.Delay.
 /// </summary>
 public class E23_AsyncAwait : IEjercicio
 {
@@ -34,6 +35,11 @@ public class E23_AsyncAwait : IEjercicio
         string[] resultados = await Task.WhenAll(t1, t2);
         Console.WriteLine($"  -> {string.Join(", ", resultados)} en {reloj.ElapsedMilliseconds} ms");
         Console.WriteLine("\n(El paralelo tarda ~la mitad: no espera en fila.)");
+
+        // FLUJO ASÍNCRONO: cada elemento se procesa en cuanto está disponible.
+        Console.WriteLine("\nFlujo asíncrono (await foreach):");
+        await foreach (string pagina in LeerPaginasAsync(3))
+            Console.WriteLine($"  -> {pagina}");
     }
 
     // Simula una operación de E/S que tarda 'ms' milisegundos.
@@ -41,5 +47,15 @@ public class E23_AsyncAwait : IEjercicio
     {
         await Task.Delay(ms);           // no bloquea el hilo mientras "descarga"
         return $"datos-{id}";
+    }
+
+    // async + yield return: una secuencia cuyos elementos llegan con el tiempo.
+    private static async IAsyncEnumerable<string> LeerPaginasAsync(int cantidad)
+    {
+        for (int i = 1; i <= cantidad; i++)
+        {
+            await Task.Delay(50);
+            yield return $"página {i}";
+        }
     }
 }

@@ -3,11 +3,11 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 /// <summary>
 /// Ejercicio 08 - Clases y objetos (POO).
 /// Principio: una clase es un molde que describe datos (propiedades) y
-/// comportamiento (metodos). Un objeto es una instancia concreta de la clase.
+/// comportamiento (métodos). Un objeto es una instancia concreta de la clase.
 /// </summary>
 public class E08_ClasesYObjetos : IEjercicio
 {
-    public string Titulo => "Clases y objetos (POO basica)";
+    public string Titulo => "Clases y objetos (POO básica)";
 
     public void Ejecutar()
     {
@@ -18,7 +18,7 @@ public class E08_ClasesYObjetos : IEjercicio
         cuenta.Depositar(50m);
         Console.WriteLine($"Tras depositar 50 -> saldo: {cuenta.Saldo:C}");
 
-        bool ok = cuenta.Retirar(200m);   // intenta retirar mas de lo disponible
+        bool ok = cuenta.Retirar(200m);   // intenta retirar más de lo disponible
         Console.WriteLine($"Retirar 200 exitoso? {ok} -> saldo: {cuenta.Saldo:C}");
 
         cuenta.Retirar(120m);
@@ -27,7 +27,7 @@ public class E08_ClasesYObjetos : IEjercicio
 }
 
 /// <summary>Clase de ejemplo: modela una cuenta bancaria simple.</summary>
-public class CuentaBancaria
+file class CuentaBancaria
 {
     // Propiedad de solo lectura desde fuera (set privado): encapsulamiento.
     public string Titular { get; }
@@ -40,7 +40,7 @@ public class CuentaBancaria
         Saldo = saldoInicial;
     }
 
-    // Metodo que modifica el estado interno del objeto.
+    // Método que modifica el estado interno del objeto.
     public void Depositar(decimal monto)
     {
         if (monto > 0)

@@ -14,14 +14,14 @@ public class E12_Linq : IEjercicio
     {
         var productos = new List<Producto>
         {
-            new("Teclado", 25.0m, "Perifericos"),
-            new("Mouse", 15.0m, "Perifericos"),
+            new("Teclado", 25.0m, "Periféricos"),
+            new("Mouse", 15.0m, "Periféricos"),
             new("Monitor", 180.0m, "Pantallas"),
-            new("Laptop", 950.0m, "Computo"),
-            new("Webcam", 40.0m, "Perifericos"),
+            new("Laptop", 950.0m, "Cómputo"),
+            new("Webcam", 40.0m, "Periféricos"),
         };
 
-        // Where: filtra los que cumplen una condicion.
+        // Where: filtra los que cumplen una condición.
         var baratos = productos.Where(p => p.Precio < 50);
         Console.WriteLine("Productos con precio < 50:");
         foreach (var p in baratos)
@@ -31,13 +31,13 @@ public class E12_Linq : IEjercicio
         var porPrecio = productos
             .OrderByDescending(p => p.Precio)
             .Select(p => p.Nombre);
-        Console.WriteLine($"\nDe mas caro a mas barato: {string.Join(", ", porPrecio)}");
+        Console.WriteLine($"\nDe más caro a más barato: {string.Join(", ", porPrecio)}");
 
         // Agregados.
         Console.WriteLine($"\nCantidad de productos : {productos.Count}");
         Console.WriteLine($"Precio total          : {productos.Sum(p => p.Precio):C}");
         Console.WriteLine($"Precio promedio       : {productos.Average(p => p.Precio):C}");
-        Console.WriteLine($"Producto mas caro     : {productos.Max(p => p.Precio):C}");
+        Console.WriteLine($"Producto más caro     : {productos.Max(p => p.Precio):C}");
 
         // GroupBy: agrupar por categoria y contar.
         Console.WriteLine("\nConteo por categoria:");
@@ -49,6 +49,6 @@ public class E12_Linq : IEjercicio
 
 /// <summary>
 /// 'record' es una forma concisa de declarar un tipo inmutable centrado en datos.
-/// Genera automaticamente constructor, comparacion por valor y ToString().
+/// Genera automaticamente constructor, comparación por valor y ToString().
 /// </summary>
-public record Producto(string Nombre, decimal Precio, string Categoria);
+file record Producto(string Nombre, decimal Precio, string Categoria);

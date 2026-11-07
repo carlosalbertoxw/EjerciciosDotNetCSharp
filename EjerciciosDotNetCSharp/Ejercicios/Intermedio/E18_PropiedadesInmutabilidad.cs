@@ -4,11 +4,12 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 /// Ejercicio 18 - Propiedades avanzadas e inmutabilidad.
 /// Principio: los objetos inmutables no cambian tras crearse, lo que los hace
 /// más seguros y predecibles. C# lo facilita con 'init', 'required',
-/// 'readonly' y la expresión 'with' de los records.
+/// 'readonly' y la expresión 'with' de los records. Cuando una propiedad sí
+/// cambia, la palabra clave 'field' permite validarla sin declarar un campo aparte.
 /// </summary>
 public class E18_PropiedadesInmutabilidad : IEjercicio
 {
-    public string Titulo => "Propiedades avanzadas e inmutabilidad (init/with)";
+    public string Titulo => "Propiedades avanzadas e inmutabilidad (init/with/field)";
 
     public void Ejecutar()
     {
@@ -34,6 +35,18 @@ public class E18_PropiedadesInmutabilidad : IEjercicio
         // Igualdad por valor de los records.
         var copia = usuario with { };   // copia idéntica
         Console.WriteLine($"\nusuario == copia -> {usuario == copia} (igualdad por valor)");
+
+        // 'field' (C# 14): valida al asignar sin declarar un campo privado.
+        var inventario = new Inventario { Existencias = 5 };
+        Console.WriteLine($"\nExistencias: {inventario.Existencias}");
+        try
+        {
+            inventario.Existencias = -1;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Asignar -1 fue rechazado por el 'set' de la propiedad.");
+        }
     }
 
     private class Configuracion
@@ -44,4 +57,17 @@ public class E18_PropiedadesInmutabilidad : IEjercicio
     }
 
     private record Usuario(string Id, string Nombre, bool Activo);
+
+    private class Inventario
+    {
+        public int Existencias
+        {
+            get;
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfNegative(value);
+                field = value;
+            }
+        }
+    }
 }

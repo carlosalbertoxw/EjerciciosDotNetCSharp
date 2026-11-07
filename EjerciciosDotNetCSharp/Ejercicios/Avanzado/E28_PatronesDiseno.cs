@@ -51,14 +51,14 @@ public class E28_PatronesDiseno : IEjercicio
 
     // ---- Factory ----
     private interface IForma { string Dibujar(); }
-    private class Circulo2 : IForma { public string Dibujar() => "○ círculo"; }
-    private class Cuadrado2 : IForma { public string Dibujar() => "□ cuadrado"; }
+    private class Circulo : IForma { public string Dibujar() => "○ círculo"; }
+    private class Cuadrado : IForma { public string Dibujar() => "□ cuadrado"; }
     private static class FabricaFormas
     {
         public static IForma Crear(string tipo) => tipo switch
         {
-            "circulo" => new Circulo2(),
-            "cuadrado" => new Cuadrado2(),
+            "circulo" => new Circulo(),
+            "cuadrado" => new Cuadrado(),
             _ => throw new ArgumentException($"Forma desconocida: {tipo}"),
         };
     }

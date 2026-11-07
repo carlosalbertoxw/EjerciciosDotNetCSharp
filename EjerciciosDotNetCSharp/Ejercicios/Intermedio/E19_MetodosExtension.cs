@@ -4,7 +4,8 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 /// Ejercicio 19 - Métodos de extensión.
 /// Principio: agregar métodos a tipos existentes (incluso los del framework)
 /// sin heredar de ellos ni modificar su código. Se declaran en una clase
-/// estática con el modificador 'this' en el primer parámetro. Así funciona LINQ.
+/// estática, con 'this' en el primer parámetro o con un bloque 'extension'
+/// (C# 14), que además permite propiedades. Así funciona LINQ.
 /// </summary>
 public class E19_MetodosExtension : IEjercicio
 {
@@ -23,15 +24,18 @@ public class E19_MetodosExtension : IEjercicio
         // Se pueden encadenar como cualquier método normal.
         string frase = "  El Veloz Zorro Marrón  ";
         Console.WriteLine($"\nResumen: '{frase.Normalizar().Truncar(10)}'");
+
+        // Propiedad de extensión: solo es posible con los bloques de C# 14.
+        Console.WriteLine($"Cantidad de palabras: {frase.CantidadPalabras}");
     }
 }
 
 /// <summary>
-/// Las extensiones viven en una clase estática. El 'this' del primer parámetro
-/// indica el tipo que se está extendiendo.
+/// Las extensiones viven en una clase estática.
 /// </summary>
-internal static class ExtensionesEjemplo
+file static class ExtensionesEjemplo
 {
+    // Forma clásica: el 'this' del primer parámetro indica el tipo que se extiende.
     public static bool EsPalindromo(this string texto)
     {
         string limpio = texto.ToLowerInvariant();
@@ -42,8 +46,15 @@ internal static class ExtensionesEjemplo
 
     public static bool EsPar(this int numero) => numero % 2 == 0;
 
-    public static string Normalizar(this string texto) => texto.Trim().ToLowerInvariant();
+    // Forma de C# 14: un bloque agrupa todos los miembros de un mismo tipo.
+    extension(string texto)
+    {
+        public string Normalizar() => texto.Trim().ToLowerInvariant();
 
-    public static string Truncar(this string texto, int max)
-        => texto.Length <= max ? texto : texto[..max] + "…";
+        public string Truncar(int max)
+            => texto.Length <= max ? texto : texto[..max] + "…";
+
+        public int CantidadPalabras
+            => texto.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+    }
 }

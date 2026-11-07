@@ -3,9 +3,9 @@ namespace EjerciciosDotNetCSharp.Ejercicios;
 /// <summary>
 /// Ejercicio 30 - Pruebas unitarias (principios).
 /// Principio: una prueba unitaria verifica automáticamente que una unidad de
-/// código hace lo esperado, siguiendo el patrón AAA (Arrange, Act, Assert). En
-/// proyectos reales se usa xUnit / NUnit / MSTest; aquí implementamos un mini
-/// verificador para mostrar la IDEA sin dependencias externas.
+/// código hace lo esperado, siguiendo el patrón AAA (Arrange, Act, Assert). Aquí
+/// implementamos un mini verificador para mostrar la IDEA. Las pruebas reales con
+/// xUnit de esta misma función están en EjerciciosDotNetCSharp.Tests/.
 /// </summary>
 public class E30_PruebasUnitarias : IEjercicio
 {
@@ -17,23 +17,26 @@ public class E30_PruebasUnitarias : IEjercicio
 
         int pasadas = 0, fallidas = 0;
 
-        // Cada prueba: Arrange (preparar) -> Act (ejecutar) -> Assert (verificar).
-        Verificar("2 es primo", esperado: true, obtenido: EsPrimo(2), ref pasadas, ref fallidas);
-        Verificar("7 es primo", esperado: true, obtenido: EsPrimo(7), ref pasadas, ref fallidas);
-        Verificar("9 no es primo", esperado: false, obtenido: EsPrimo(9), ref pasadas, ref fallidas);
-        Verificar("1 no es primo", esperado: false, obtenido: EsPrimo(1), ref pasadas, ref fallidas);
-        Verificar("negativo no es primo", esperado: false, obtenido: EsPrimo(-5), ref pasadas, ref fallidas);
+        // Una prueba escrita con sus tres pasos a la vista:
+        int numero = 7;                         // Arrange: preparar los datos
+        bool obtenido = EsPrimo(numero);        // Act: ejecutar la unidad
+        Verificar("7 es primo", esperado: true, obtenido, ref pasadas, ref fallidas);   // Assert
+
+        // Las demás, de forma abreviada:
+        Verificar("2 es primo", esperado: true, EsPrimo(2), ref pasadas, ref fallidas);
+        Verificar("9 no es primo", esperado: false, EsPrimo(9), ref pasadas, ref fallidas);
+        Verificar("1 no es primo", esperado: false, EsPrimo(1), ref pasadas, ref fallidas);
+        Verificar("negativo no es primo", esperado: false, EsPrimo(-5), ref pasadas, ref fallidas);
 
         Console.WriteLine($"\nResultado: {pasadas} pasadas, {fallidas} fallidas.");
-        Console.WriteLine("\nCon xUnit esto sería: [Fact] public void EsPrimo_De7_DevuelveTrue()" +
-                          " => Assert.True(EsPrimo(7));");
+        Console.WriteLine("\nPara ver las mismas pruebas con xUnit: dotnet test");
     }
 
     // Unidad bajo prueba: una función pura, fácil de testear.
-    private static bool EsPrimo(int n)
+    public static bool EsPrimo(int n)
     {
         if (n < 2) return false;
-        for (int i = 2; i * i <= n; i++)
+        for (int i = 2; i <= n / i; i++)
             if (n % i == 0) return false;
         return true;
     }
